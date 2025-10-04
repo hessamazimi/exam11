@@ -1,0 +1,190 @@
+<index.htm>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title>محمد حسام عظیمی | مهندسی الکترونیک</title>
+  <style>
+    body {
+      font-family: 'Tahoma', sans-serif;
+      background: linear-gradient(to right, #1c1c1c, #2e2e2e);
+      color: #f1f1f1;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ffcc00;
+      color: #000;
+      padding: 20px;
+      text-align: center;
+    }
+    .profile {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      background-color: #333;
+      flex-wrap: wrap;
+    }
+    .profile img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin-left: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .profile img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #ffcc00;
+    }
+    .info {
+      flex: 1;
+      min-width: 250px;
+    }
+    .info h2 {
+      margin: 0;
+      color: #ffcc00;
+    }
+    .tools, .gallery {
+      padding: 20px;
+    }
+    .tools ul {
+      list-style: none;
+      padding: 0;
+    }
+    .tools li {
+      background-color: #444;
+      margin: 10px 0;
+      padding: 10px;
+      border-left: 5px solid #ffcc00;
+    }
+    .gallery img {
+      width: 200px;
+      margin: 10px;
+      border: 2px solid #ffcc00;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .gallery img:hover {
+      transform: rotate(-2deg) scale(1.1);
+    }
+    footer {
+      background-color: #222;
+      color: #aaa;
+      text-align: center;
+      padding: 10px;
+    }
+    @media (max-width: 768px) {
+      .profile {
+        flex-direction: column;
+        text-align: center;
+      }
+      .profile img {
+        margin: 0 auto 20px;
+      }
+      .gallery img {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>محمد حسام عظیمی</h1>
+  <p>دانشجوی مهندسی الکترونیک - دانشگاه آزاد اسلامی واحد خوراسگان</p>
+</header>
+
+<section class="profile">
+  <img src="profile.jpg" alt="عکس پروفایل" onclick="changeProfilePhoto()">
+  <div class="info">
+    <h2>اطلاعات تماس</h2>
+    <p>📞 09130100942</p>
+    <p>📧 Mohessam1381@gmail.com</p>
+  </div>
+</section>
+
+<section class="tools">
+  <h2>🛠 ابزارها و مهارت‌ها</h2>
+  <ul>
+    <li>طراحی مدارهای الکترونیکی</li>
+    <li>برنامه‌نویسی میکروکنترلرها</li>
+    <li>تحلیل سیگنال‌ها و سیستم‌ها</li>
+    <li>کار با نرم‌افزارهای MATLAB و Proteus</li>
+  </ul>
+</section>
+
+<section class="gallery">
+  <h2>🖼 گالری تصاویر</h2>
+  <input type="file" accept="image/*" onchange="addImage(event)">
+  <div id="imageContainer"></div>
+</section>
+
+<!-- پنجره نمایش عکس -->
+<div id="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000000cc;z-index:999;">
+  <span onclick="closeModal()" style="position:absolute;top:20px;right:30px;font-size:30px;color:#fff;cursor:pointer;">×</span>
+  <img id="modalImg" style="margin:auto;display:block;max-width:90%;max-height:90%;margin-top:5%;">
+</div>
+
+<footer>
+  <p>© 2025 محمد حسام عظیمی</p>
+</footer>
+
+<script>
+  function changeProfilePhoto() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = e => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const imgSrc = reader.result;
+        document.querySelector('.profile img').src = imgSrc;
+        localStorage.setItem('profilePhoto', imgSrc);
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    };
+    input.click();
+  }
+
+  function addImage(event) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = document.createElement('img');
+      img.src = reader.result;
+      img.onclick = () => openModal(img.src);
+      document.getElementById('imageContainer').appendChild(img);
+
+      let gallery = JSON.parse(localStorage.getItem('gallery') || '[]');
+      gallery.push(reader.result);
+      localStorage.setItem('gallery', JSON.stringify(gallery));
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  }
+
+  function openModal(src) {
+    document.getElementById('modalImg').src = src;
+    document.getElementById('modal').style.display = 'block';
+  }
+
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+  }
+
+  window.onload = () => {
+    const savedPhoto = localStorage.getItem('profilePhoto');
+    if (savedPhoto) {
+      document.querySelector('.profile img').src = savedPhoto;
+    }
+
+    const savedGallery = JSON.parse(localStorage.getItem('gallery') || '[]');
+    savedGallery.forEach(src => {
+      const img = document.createElement('img');
+      img.src = src;
+      img.onclick = () => openModal(src);
+      document.getElementById('imageContainer').appendChild(img);
+    });
+  };
+</script>
+
+</body>
+</html>
